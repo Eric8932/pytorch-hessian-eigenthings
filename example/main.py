@@ -2,6 +2,7 @@
 A simple example to calculate the top eigenvectors for the hessian of
 ResNet18 network for CIFAR-10
 """
+#直接拿这个代码放到uer里看能不能跑
 
 import track
 import skeletor
@@ -40,7 +41,7 @@ def extra_args(parser):
         help="if true,\
                         loop over all batches in set for each gradient step",
     )
-    parser.add_argument("--fname", default="", type=str)
+    parser.add_argument("--fname", default="", type=str)#预训练模型
     parser.add_argument("--mode", type=str, choices=["power_iter", "lanczos"])
 
 
@@ -57,11 +58,12 @@ def main(args):
         model = torch.load(args.fname, map_location="cpu").cuda()
     else:
         model = build_model("ResNet18", num_classes=10)
-    criterion = torch.nn.CrossEntropyLoss()
+    criterion = torch.nn.CrossEntropyLoss()#损失函数
+    #所以其实只需要把模型弄好，以及train_loader弄好就行
     eigenvals, eigenvecs = compute_hessian_eigenthings(
-        model,
-        testloader,
-        criterion,
+        model,#模型forward能输出logits就行
+        testloader,#就把要trian_loader放进去，能iter就行
+        criterion,#损失函数，所以model估计生成到logits就行
         args.num_eigenthings,
         mode=args.mode,
         # power_iter_steps=args.num_steps,
